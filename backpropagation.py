@@ -78,3 +78,42 @@
  - 시그모이드: scipy > expit(), numpy
 
 '''
+
+# 라이브러리 임포트
+from scipy import special as sp
+
+# Forward
+
+# 초기값 할당
+i1 = 0.05
+i2 = 0.1
+w1 = 0.15
+w2 = 0.2
+w3 = 0.25
+w4 = 0.3
+w5 = 0.4
+w6 = 0.45
+w7 = 0.5
+w8 = 0.55
+o1 = 0.01
+o2 = 0.99
+b1 = 0.35
+b2 = 0.6
+
+# 함수(가중치1,노드1,가중치2,노드2,bias)
+
+# 은닉계층 입력값 계산
+net_h1 = w1*i1+w2*i2+b1*1
+net_h2 = w3*i1+w4*i2+b1*1
+
+# 활성화 함수
+out_h1 = sp.expit(net_h1)
+out_h2 = sp.expit(net_h2)
+
+# 출력계층 입력값 계산
+net_o1 = w5*out_h1+w6*out_h2*b2
+net_o2 = w7*out_h1+w8*out_h2*b2
+
+# 활성화 함수
+out_o1 = sp.expit(net_o1)
+out_o2 = sp.expit(net_o2)
