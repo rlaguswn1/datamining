@@ -80,9 +80,12 @@
 '''
 
 # 라이브러리 임포트
-from scipy import special as sp
+from scipy import special as sp # 시그모이드
+import sympy as sm # 미분
+import math as m# 연산 관련
+import numpy as np 
 
-# Forward
+## 1. Forward ##
 
 # 초기값 할당
 i1 = 0.05
@@ -100,20 +103,41 @@ o2 = 0.99
 b1 = 0.35
 b2 = 0.6
 
-# 함수(가중치1,노드1,가중치2,노드2,bias)
-
 # 은닉계층 입력값 계산
 net_h1 = w1*i1+w2*i2+b1*1
 net_h2 = w3*i1+w4*i2+b1*1
 
 # 활성화 함수
-out_h1 = sp.expit(net_h1)
-out_h2 = sp.expit(net_h2)
+# out_h1 = sp.expit(net_h1)
+# out_h2 = sp.expit(net_h2)
+# expit 쓰니까 아래 미분 부분에서 계산을 못하는것 같다. 시그모이드 식을 직접 넣어주는 것으로..
+out_h1 = 1 / (1 + np.exp(-net_h1))
+out_h2 = 1 / (1 + np.exp(-net_h2))
 
 # 출력계층 입력값 계산
 net_o1 = w5*out_h1+w6*out_h2*b2
 net_o2 = w7*out_h1+w8*out_h2*b2
 
 # 활성화 함수
-out_o1 = sp.expit(net_o1)
-out_o2 = sp.expit(net_o2)
+# out_o1 = sp.expit(net_o1)
+# out_o2 = sp.expit(net_o2)
+out_o1 = 1 / (1 + np.exp(-net_o1))
+out_o2 = 1 / (1 + np.exp(-net_o2))
+
+# 2. Error
+# sum(((1/2)*(목표값-실제값)^2)
+
+e1 = (1/2)*pow(o1-out_o1,2)
+e2 = (1/2)*pow(o2-out_o2,2)
+e_total = e1+e2
+
+## 3. Backward ##
+
+# wn에 대한 Et의 변화율을 볼것 d(Et)/d(wn)
+# 단번에는 계산 불가하여 chain rule 이용
+# d(Et)/d(wn) = d(Et)/d(out_on)*d(out_on)/d(net_on)*d(net_on)/d(wn)
+
+# w5에 대해
+# 1) d(et)/d(out_o1)
+# 이거 안돌아간다 어카누;;
+sm.diff(e_total,out_o1)
